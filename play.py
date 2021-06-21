@@ -8,12 +8,12 @@ lights = b.lights
 
 # b.set_light('OwenBedroom', 'on', True)
 def flash():
-    pulses = 3
+    pulses = 5
     while pulses > 0:
         b.set_light('OwenBedroom', 'on', False)
-        time.sleep(1)
+        time.sleep(0.5)
         b.set_light('OwenBedroom', 'on', True)
-        time.sleep(1)
+        time.sleep(0.5)
         pulses -= 1
         
 now = datetime.now()
@@ -28,12 +28,4 @@ def wakemeup():
             b.set_light("OwenBedroom", 'on', False)
             break
 
-while True:
-    command = input(">> ")
-    if command == "exit":
-        exit()
-    elif command == "start":
-        thread = threading.Thread(target=wakemeup)
-        thread.start()
-    else:
-        print("blaaa")
+flash()

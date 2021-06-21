@@ -23,6 +23,30 @@ def get_group(group_name):
         if g.name == group_name:
             return g
 
+# needs to be vetted to allow spaces when quotation marks are used
+# this only allows one space max between words
+def split(command):
+    command = command.split()
+    vetted_commands = []
+    # variable to store combination
+    comb = ""
+    add_to_comb = False
+    for i in command:
+        if i[0] == '"':
+            comb += i[1:]
+            add_to_comb = True
+        elif i[-1] == '"':
+            comb += " " + i[:-1]
+            vetted_commands.append(comb)
+            comb = ""
+            add_to_comb = False
+        else:
+            if add_to_comb == True:
+                comb += " " + i
+            else:
+                vetted_commands.append(i)
+    return vetted_commands
+
 
 
 ##################
@@ -176,34 +200,6 @@ def wakemeup(args):
             print("Wakey wakey...\n")
             break
 
-
-
-
-
-# needs to be vetted to allow spaces when quotation marks are used
-# this only allows one space max between words
-def split(command):
-    command = command.split()
-    vetted_commands = []
-    # variable to store combination
-    comb = ""
-    add_to_comb = False
-    for i in command:
-        if i[0] == '"':
-            comb += i[1:]
-            add_to_comb = True
-        elif i[-1] == '"':
-            comb += " " + i[:-1]
-            vetted_commands.append(comb)
-            comb = ""
-            add_to_comb = False
-        else:
-            if add_to_comb == True:
-                comb += " " + i
-            else:
-                vetted_commands.append(i)
-    return vetted_commands
-
 # command handler - takes list with each element being word from command
 def execute(command):
     method = str.lower(command[0])
@@ -222,6 +218,7 @@ def execute(command):
         wakemeup(args)
     else:
         print("ERROR: Invalid command, type help for all valid commands.")
+
 
 def artwork():
     print("""\n
@@ -252,7 +249,4 @@ change names of lights and groups
 
 change colour of lights
 change colour of groups
-
-set wake up times and stuff
-
 """
