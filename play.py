@@ -1,6 +1,8 @@
 # import bridge from connect script
 from connect import b
 import time
+from datetime import datetime
+import threading
 
 lights = b.lights
 
@@ -14,7 +16,24 @@ def flash():
         time.sleep(1)
         pulses -= 1
         
-search = 'Bedroom (Owen)'
-for g in b.groups:
-    if g.name == search:
-        print("YAAYYY")
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+
+def wakemeup():
+
+    wake_time = datetime(2021, 6, 21, 22, 50)
+
+    while True:
+        if datetime.now() > wake_time:
+            b.set_light("OwenBedroom", 'on', False)
+            break
+
+while True:
+    command = input(">> ")
+    if command == "exit":
+        exit()
+    elif command == "start":
+        thread = threading.Thread(target=wakemeup)
+        thread.start()
+    else:
+        print("blaaa")
