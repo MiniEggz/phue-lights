@@ -1,0 +1,5 @@
+To find the ip, can do arp -a to list all the ips on the network
+
+The ping the ips using ping -a [ip] to see what the device is
+
+Should finally come up with 'Pinging Phillips-hue'
