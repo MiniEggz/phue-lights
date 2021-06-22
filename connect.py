@@ -86,7 +86,7 @@ def connect():
             b = Bridge(ip)
             b.connect()
             print(f'Connected to bridge@{ip}\n')
-            return b
+            return b, ip
         except Exception as e:
             if button_not_pressed_message in str(e):
                 print('cannot connect to bridge: please press button on bridge and press enter.')
@@ -99,7 +99,7 @@ def connect():
                 else:
                     return False
 
-b = connect()
+b, ip = connect()
 
 
 

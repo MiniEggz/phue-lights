@@ -3,7 +3,7 @@ import datetime
 import time
 # import bridge from connect script
 artwork.connect()
-from connect import b
+from connect import b, ip
 
 # things that can be listed -- lights (and status), groups/rooms
 
@@ -224,7 +224,7 @@ def execute(command):
 def start_CLI():
     artwork.hcontroller()
     while True:
-        command = input(">> ")
+        command = input("bridge@"+ip+":# ")
         if str.lower(command) == 'exit':
             break
         execute(split(command))
