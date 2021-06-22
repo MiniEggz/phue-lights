@@ -3,6 +3,9 @@ from bridge_ip import ip
 import subprocess
 import os
 import re
+import sys
+
+button_not_pressed_message == 'The link button has not been pressed in the last 30 seconds.'
 
 def get_iplist():
     print('finding all ip addresses on your network...')
@@ -24,19 +27,24 @@ def find_bridge_ip(iplist):
             b = Bridge(ip)
             b.connect()
             bridge_iplist.append(ip)
-            print('SUCCESS')
-        except Exception:
-            print('FAILED')
-    print('found all bridge ip addresses...')
+        except Exception as e:
+            if button_not_pressed_message in str(e):
+                bridge_iplist.append(ip)
+
+    if len(bridge_iplist) == 0:
+        print('no bridge ip addresses were found.')
+    else:
+        print('found all bridge ip addresses...')
+        print('\nBRIDGES:')
+        for b in bridge_iplist:
+            print(b)
     return bridge_iplist
 
 
 if __name__ == '__main__':
     iplist = get_iplist()
     bridges = find_bridge_ip(iplist)
-    print('\nBRIDGES:')
-    for b in bridges:
-        print(b)
+    print(bridges)
 
 #b = Bridge(ip)
 
