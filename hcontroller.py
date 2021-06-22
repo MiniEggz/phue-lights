@@ -1,8 +1,10 @@
-# import bridge from connect script
-from connect import b
-
+import artwork
 import datetime
 import time
+# import bridge from connect script
+artwork.connect()
+from connect import b
+
 # things that can be listed -- lights (and status), groups/rooms
 
 # turn lights on and off -- e.g. turn OwenBedroom off / turn OwenBedroom on
@@ -219,18 +221,8 @@ def execute(command):
     else:
         print("ERROR: Invalid command, type help for all valid commands.")
 
-
-def artwork():
-    print("""\n
-   __                 __           ____                   
-  / /  _______  ___  / /________  / / /__ ____  ___  __ __
- / _ \/ __/ _ \/ _ \/ __/ __/ _ \/ / / -_) __/ / _ \/ // /
-/_//_/\__/\___/_//_/\__/_/  \___/_/_/\__/_/ (_) .__/\_, / 
-                                             /_/   /___/ 
-    \n""")
-
 def start_CLI():
-    artwork()
+    artwork.hcontroller()
     while True:
         command = input(">> ")
         if str.lower(command) == 'exit':

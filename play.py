@@ -1,4 +1,5 @@
 # import bridge from connect script
+'''
 from connect import b
 import time
 from datetime import datetime
@@ -32,8 +33,7 @@ def wakemeup():
 
 print(platform.system())
 
+'''
 
-
-import subprocess
-output = subprocess.getoutput('arp -a')
-print(output)
+for i in range (0,2):
+    print(i)
