@@ -5,7 +5,7 @@ import os
 import re
 import sys
 
-button_not_pressed_message == 'The link button has not been pressed in the last 30 seconds.'
+button_not_pressed_message = 'The link button has not been pressed in the last 30 seconds.'
 
 def get_iplist():
     print('finding all ip addresses on your network...')
