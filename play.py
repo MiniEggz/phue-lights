@@ -3,6 +3,8 @@ from connect import b
 import time
 from datetime import datetime
 import threading
+import platform
+import os
 
 lights = b.lights
 
@@ -28,4 +30,10 @@ def wakemeup():
             b.set_light("OwenBedroom", 'on', False)
             break
 
-flash()
+print(platform.system())
+
+
+
+import subprocess
+output = subprocess.getoutput('arp -a')
+print(output)
