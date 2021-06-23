@@ -1,44 +1,89 @@
 import sqlite3
 from sqlite3 import Error
 
-def create_connection(db_file):
-    conn = None
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-        print('error')
-    return conn
+class Colours:
 
-def create_table(conn, create_table_sql):
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-    except Error as e:
-        print(e)
+    def __init__(self):
+        self.db = 'db\\colours.db'
+
+    def create_connection(self):
+        conn = None
+        try:
+            conn = sqlite3.connect(self.db)
+        except Error as e:
+            print(e)
+        return conn
+
+
+    colours_table_sql = '''
+    CREATE TABLE IF NOT EXISTS colours (
+        colour_name text PRIMARY KEY,
+        red integer,
+        green integer,
+        blue integer
+    );'''
+
+    def create_table(self, create_table_sql):
+        conn = self.create_connection()
+        try:
+            c = conn.cursor()
+            c.execute(create_table_sql)
+        except Error as e:
+            print(e)
+        conn.close()
+
+    def create_colour(self, colour):
+        conn = self.create_connection()
+        sql = 'INSERT INTO colours(colour_name, red, green, blue) VALUES(?,?,?,?)'
+        cur = conn.cursor()
+        cur.execute(sql, colour)
+        conn.commit()
+        conn.close()
+
+    def delete_colour(self, colour_name):
+        conn = self.create_connection()
+        sql = 'DELETE FROM colours WHERE colour_name=?'
+        cur = conn.cursor()
+        cur.execute(sql, (colour_name,))
+        conn.commit()
+        conn.close()
+
+    def delete_all_colours(self):
+        conn = self.create_connection()
+        sql = 'DELETE FROM colours'
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+        conn.close()
     
+    def get_colour(self, colour_name):
+        conn = self.create_connection()
+        sql = 'SELECT * FROM colours WHERE colour_name=?'
+        cur = conn.cursor()
+        cur.execute(sql, (colour_name,))
+        colour = cur.fetchone()
+        conn.close()
+        return colour
 
-colours_table_sql = '''
-CREATE TABLE IF NOT EXISTS colours (
-    colour_name text PRIMARY KEY,
-    red integer,
-    green integer,
-    blue integer
-);'''
+    def get_all_names(self):
+        conn = self.create_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM colours')
+        
+        rows = cur.fetchall()
 
-def create_colour(conn, colour):
-    sql = 'INSERT INTO colours(colour_name, red, green, blue) VALUES(?,?,?,?)'
-    cur = conn.cursor()
-    cur.execute(sql, colour)
-    conn.commit()
+        colours = []
+        for row in rows:
+            colours.append(f'{row[0]} [{row[1]},{row[2]},{row[3]}]')
+        
+        return colours
 
+    def print_all(self):
+        conn = self.create_connection()
+        cur = conn.cursor()
+        cur.execute('SELECT * FROM colours')
 
+        rows = cur.fetchall()
 
-if __name__ == '__main__':
-    db = 'db\\colours.db'
-    conn = create_connection(db)
-
-    with conn:
-        colour = ('white', 255, 255, 255)
-        create_colour(conn, colour)
+        for row in rows:
+            print(row)

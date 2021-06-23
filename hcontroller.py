@@ -2,6 +2,7 @@ import artwork
 import datetime
 import time
 import colorsys
+from database import Colours
 # import bridge from connect script
 artwork.connect()
 from connect import b, ip
@@ -57,6 +58,12 @@ def set_light_to_colour(light_name, rgb):
     b.set_light(light_name, 'sat', int(round(s * 255)))
     b.set_light(light_name, 'bri', int(round(v)))
 
+def get_ans():
+    ans = ''
+    while ans != 'y' and ans != 'n':
+        ans = str.lower(input('y/n > '))
+    return ans
+
 
 ##################
 #                #
@@ -86,6 +93,13 @@ def ls(args):
             for l in g.lights:
                 print(f"\tNAME: {l.name}\tON: {l.on}")
             print()
+    elif object == 'colours':
+        print('\nCOLOURS:\n')
+        db = Colours()
+        colours = db.get_all_names()
+        for c in colours:
+            print(c)
+        print()
     else:
         print(f"'{object}' is not a valid object to list.")
     
@@ -223,15 +237,76 @@ def setcol(args):
     for i in rgb:
         if i > 255 or i < 0:
             print('ERROR: one of the colour values was out of range 0-255.')
+            return
     set_light_to_colour(args[0], rgb)
 
 def col(args):
     if len(args) != 2:
-        print('ERROR: col takes exactly 2 arguments - [light_name] [colour]')
+        print('ERROR: col takes exactly 2 arguments - [light_name] [colour_name]')
+        return
+    db = Colours()
+    colour = db.get_colour(args[1])
+
+    if colour is not None:
+        rgb = colour[1:]
+        set_light_to_colour(args[0], rgb)
+    else:
+        print(f"ERROR: '{args[1]}' is not a defined colour.")
+        return
 
 def newcol(args):
     if len(args) != 4:
-        print('ERROR: newcol takes exactly 4 arguments - [colour_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
+        print('ERROR: newcol takes exactly 4 arguments - [light_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
+        return
+    rgb = [args[1], args[2], args[3]]
+    try:
+        for i in range (0,len(rgb)):
+            rgb[i] = int(rgb[i])
+    except Exception:
+        print('ERROR: one of the colour arguments was not an integer.')
+        return
+    for i in rgb:
+        if i > 255 or i < 0:
+            print('ERROR: one of the colour values was out of range 0-255.')
+            return
+
+    db = Colours()
+    if db.get_colour(args[0]) is None:
+        db.create_colour((args[0], rgb[0], rgb[1], rgb[2]))
+    else:
+        print(f"ERROR: this colour already exists, please delete the preset with this name with 'delcol {args[0]}'.")
+    
+def delcol(args):
+    if len(args) != 1:
+        print('ERROR: delcol takes exactly 1 argument - [light_name]')
+        return
+    
+    db = Colours()
+    colour = db.get_colour(args[0])
+
+    if colour is not None:
+        print(f"Are you sure you want to delete the colour '{args[0]}'?")
+        ans = get_ans()
+        if ans == 'y':
+            db.delete_colour(args[0])
+            print(f"'{args[0]}' has been deleted.'")
+    else:
+        print(f"ERROR: '{args[0]}' is not a defined colour.")
+
+def delallcol(args):
+    if len(args) != 0:
+        print('ERROR: delallcol takes no arguments')
+        return
+
+    db = Colours()
+    print('Are you sure you want to delete all saved colours?')
+    ans = get_ans()
+    if ans == 'y':
+        db.delete_all_colours()
+        print('all saved colours have been deleted.')
+    
+    
+    
     
 # command handler - takes list with each element being word from command
 def execute(command):
@@ -251,8 +326,16 @@ def execute(command):
         wakemeup(args)
     elif method == 'setcol':
         setcol(args)
+    elif method == 'newcol':
+        newcol(args)
+    elif method == 'col':
+        col(args)
+    elif method == 'delcol':
+        delcol(args)
+    elif method == 'delallcol':
+        delallcol(args)
     else:
-        print("ERROR: Invalid command, type help for all valid commands.")
+        print("ERROR: invalid command, type help for all valid commands.")
 
 def start_CLI():
     artwork.hcontroller()
