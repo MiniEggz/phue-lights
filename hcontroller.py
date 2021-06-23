@@ -22,12 +22,13 @@ from connect import b, ip
 #               #
 #################
 
+# get a group from group_name
 def get_group(group_name):
     for g in b.groups:
         if g.name == group_name:
             return g
 
-# needs to be vetted to allow spaces when quotation marks are used
+# command needs to be vetted to allow spaces when quotation marks are used
 # this only allows one space max between words
 def split(command):
     command = command.split()
@@ -51,6 +52,7 @@ def split(command):
                 vetted_commands.append(i)
     return vetted_commands
 
+# converts rgb to hsv and sets the light to the colour
 def set_light_to_colour(light_name, rgb):
     h, s, v = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
 
@@ -58,6 +60,7 @@ def set_light_to_colour(light_name, rgb):
     b.set_light(light_name, 'sat', int(round(s * 255)))
     b.set_light(light_name, 'bri', int(round(v)))
 
+# gets ans to yes or no question
 def get_ans():
     ans = ''
     while ans != 'y' and ans != 'n':
@@ -78,6 +81,7 @@ def ls(args):
         print("ERROR: 'ls' takes exactly 1 argument - [object]")
         return
 
+    # outputs the list of all specified object type
     object = str.lower(args[0])
     rstring = ""
     if object == 'lights':
@@ -191,6 +195,7 @@ def brightnessall(args):
     except Exception:
         print("ERROR: this group name does not exist.")
 
+# turns specified light on at a specified time
 def wakemeup(args):
     if len(args) != 3:
         print("ERROR: 'wakemeup takes exactly 3 arguments - [light_name] [hour] [minute]")
@@ -206,9 +211,11 @@ def wakemeup(args):
     hours = int(args[1])
     mins = int(args[2])
 
+    # set datetime objects for now and wake time
     now = datetime.datetime.now()
     wake_time = datetime.datetime(now.year, now.month, now.day, hours, mins)
 
+    # check whether the next time is today or tomorrow
     if wake_time < now:
         day = "tomorrow"
         wake_time += datetime.timedelta(days=1)
@@ -217,12 +224,14 @@ def wakemeup(args):
     
     print(f"Waiting to wake you up at {wake_time.hour}:{wake_time.minute} {day}...")
     
+    # loops until time to turn on
     while True:
         if datetime.datetime.now() > wake_time:
             b.set_light(light_name, 'on', True)
             print("Wakey wakey...\n")
             break
 
+# sets light colour to specific rgb colour
 def setcol(args):
     if len(args) != 4:
         print('ERROR: setcol takes exactly 4 arguments - [light_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
@@ -240,6 +249,7 @@ def setcol(args):
             return
     set_light_to_colour(args[0], rgb)
 
+# sets light to one of the saved colours
 def col(args):
     if len(args) != 2:
         print('ERROR: col takes exactly 2 arguments - [light_name] [colour_name]')
@@ -254,6 +264,7 @@ def col(args):
         print(f"ERROR: '{args[1]}' is not a defined colour.")
         return
 
+# adds a new rgb colour to the saved colours
 def newcol(args):
     if len(args) != 4:
         print('ERROR: newcol takes exactly 4 arguments - [light_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
@@ -276,6 +287,7 @@ def newcol(args):
     else:
         print(f"ERROR: this colour already exists, please delete the preset with this name with 'delcol {args[0]}'.")
     
+# deletes a colour based on the name of the light
 def delcol(args):
     if len(args) != 1:
         print('ERROR: delcol takes exactly 1 argument - [light_name]')
@@ -293,6 +305,7 @@ def delcol(args):
     else:
         print(f"ERROR: '{args[0]}' is not a defined colour.")
 
+# deletes all saved colours
 def delallcol(args):
     if len(args) != 0:
         print('ERROR: delallcol takes no arguments')
@@ -303,10 +316,7 @@ def delallcol(args):
     ans = get_ans()
     if ans == 'y':
         db.delete_all_colours()
-        print('all saved colours have been deleted.')
-    
-    
-    
+        print('all saved colours have been deleted.') 
     
 # command handler - takes list with each element being word from command
 def execute(command):
@@ -337,6 +347,7 @@ def execute(command):
     else:
         print("ERROR: invalid command, type help for all valid commands.")
 
+# starts the cli loop
 def start_CLI():
     artwork.hcontroller()
     while True:
@@ -355,6 +366,5 @@ if __name__ == "__main__":
 TODO:
 change names of lights and groups
 
-change colour of lights
 change colour of groups
 """

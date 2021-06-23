@@ -9,6 +9,7 @@ import artwork
 
 button_not_pressed_message = 'The link button has not been pressed in the last 30 seconds.'
 
+# get all ips on the network
 def get_iplist():
     print('finding all ip addresses on your network...')
     iplist = []
@@ -21,6 +22,7 @@ def get_iplist():
     print('found all ip adresses...')
     return iplist
 
+# get all bridges on network given all ips
 def get_bridge_iplist(iplist):
     print('finding ip addresses of all bridge devices on your network...')
     bridge_iplist = []
@@ -42,6 +44,7 @@ def get_bridge_iplist(iplist):
             print(b)
     return bridge_iplist
 
+# user to pick an option from a list
 def get_index(iplist):
     while True:
         print('\nplease select one of these ip addresses\n')
@@ -57,7 +60,7 @@ def get_index(iplist):
         except Exception:
             print('that was not a valid option')
 
-
+# select bridge from list of bridges
 def select_bridge(iplist):
     ip = ''
     # may need to select which ip if more than one
@@ -79,19 +82,23 @@ def read_ip():
     f.close()
     return ip
 
+# connect to the bridge, return bridge object and ip
 def connect():
     while True:
         try:
+            # try to connect using ip in ip.txt
             ip = read_ip()
             b = Bridge(ip)
             b.connect()
             print(f'Connected to bridge@{ip}\n')
             return b, ip
         except Exception as e:
+            # bridge ip has been found but button needs to be pressed
             if button_not_pressed_message in str(e):
                 print('cannot connect to bridge: please press button on bridge and press enter.')
                 input()
             else:
+                # need to find the ip and store in ip.txt
                 bridge_iplist = get_bridge_iplist(get_iplist())
                 if len(bridge_iplist) > 0:
                     bridge_ip = select_bridge(bridge_iplist)

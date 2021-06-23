@@ -4,6 +4,7 @@ from sqlite3 import Error
 
 class Colours:
 
+    # set db path
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
         self.db = os.path.join(base_dir, 'db/colours.db')
@@ -16,7 +17,7 @@ class Colours:
             print(e)
         return conn
 
-
+    # statement to create table
     colours_table_sql = '''
     CREATE TABLE IF NOT EXISTS colours (
         colour_name text PRIMARY KEY,
@@ -34,6 +35,7 @@ class Colours:
             print(e)
         conn.close()
 
+    # insert colour in with name and rgb data
     def create_colour(self, colour):
         conn = self.create_connection()
         sql = 'INSERT INTO colours(colour_name, red, green, blue) VALUES(?,?,?,?)'
@@ -42,6 +44,7 @@ class Colours:
         conn.commit()
         conn.close()
 
+    # delete colour based on name
     def delete_colour(self, colour_name):
         conn = self.create_connection()
         sql = 'DELETE FROM colours WHERE colour_name=?'
@@ -50,6 +53,7 @@ class Colours:
         conn.commit()
         conn.close()
 
+    # clear colours table
     def delete_all_colours(self):
         conn = self.create_connection()
         sql = 'DELETE FROM colours'
@@ -58,6 +62,7 @@ class Colours:
         conn.commit()
         conn.close()
     
+    # get colour tuple based on name
     def get_colour(self, colour_name):
         conn = self.create_connection()
         sql = 'SELECT * FROM colours WHERE colour_name=?'
@@ -67,6 +72,7 @@ class Colours:
         conn.close()
         return colour
 
+    # get all the names of colours
     def get_all_names(self):
         conn = self.create_connection()
         cur = conn.cursor()
