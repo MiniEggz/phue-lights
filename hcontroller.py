@@ -1,6 +1,7 @@
 import artwork
 import datetime
 import time
+import colorsys
 # import bridge from connect script
 artwork.connect()
 from connect import b, ip
@@ -49,6 +50,12 @@ def split(command):
                 vetted_commands.append(i)
     return vetted_commands
 
+def set_light_to_colour(light_name, rgb):
+    h, s, v = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+
+    b.set_light(light_name, 'hue', int(round(h * 65535)))
+    b.set_light(light_name, 'sat', int(round(s * 255)))
+    b.set_light(light_name, 'bri', int(round(v)))
 
 
 ##################
@@ -202,6 +209,30 @@ def wakemeup(args):
             print("Wakey wakey...\n")
             break
 
+def setcol(args):
+    if len(args) != 4:
+        print('ERROR: setcol takes exactly 4 arguments - [light_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
+        return
+    rgb = [args[1], args[2], args[3]]
+    try:
+        for i in range (0,len(rgb)):
+            rgb[i] = int(rgb[i])
+    except Exception:
+        print('ERROR: one of the colour arguments was not an integer.')
+        return
+    for i in rgb:
+        if i > 255 or i < 0:
+            print('ERROR: one of the colour values was out of range 0-255.')
+    set_light_to_colour(args[0], rgb)
+
+def col(args):
+    if len(args) != 2:
+        print('ERROR: col takes exactly 2 arguments - [light_name] [colour]')
+
+def newcol(args):
+    if len(args) != 4:
+        print('ERROR: newcol takes exactly 4 arguments - [colour_name] [red (0-255)] [green (0-255)] [blue (0-255)]')
+    
 # command handler - takes list with each element being word from command
 def execute(command):
     method = str.lower(command[0])
@@ -214,10 +245,12 @@ def execute(command):
         turnall(args)
     elif method == "brightness":
         brightness(args)
-    elif method == "brightnessall":
+    elif method == 'brightnessall':
         brightnessall(args)
-    elif method == "wakemeup":
+    elif method == 'wakemeup':
         wakemeup(args)
+    elif method == 'setcol':
+        setcol(args)
     else:
         print("ERROR: Invalid command, type help for all valid commands.")
 
