@@ -6,7 +6,7 @@ class Colours:
 
     def __init__(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.db = os.path.join(base_dir, 'db\\colours.db')
+        self.db = os.path.join(base_dir, 'db/colours.db')
 
     def create_connection(self):
         conn = None
