@@ -1,10 +1,12 @@
+import os.path
 import sqlite3
 from sqlite3 import Error
 
 class Colours:
 
     def __init__(self):
-        self.db = 'db\\colours.db'
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.db = os.path.join(base_dir, 'db\\colours.db')
 
     def create_connection(self):
         conn = None
