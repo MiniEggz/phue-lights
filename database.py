@@ -19,17 +19,26 @@ def create_table(conn, create_table_sql):
         print(e)
     
 
-colours_table_sql = ''' CREATE TABLE IF NOT EXISTS colours (
-                            colour_name text PRIMARY KEY,
-                            red integer,
-                            green integer,
-                            blue integer
-                        );'''
+colours_table_sql = '''
+CREATE TABLE IF NOT EXISTS colours (
+    colour_name text PRIMARY KEY,
+    red integer,
+    green integer,
+    blue integer
+);'''
+
+def create_colour(conn, colour):
+    sql = 'INSERT INTO colours(colour_name, red, green, blue) VALUES(?,?,?,?)'
+    cur = conn.cursor()
+    cur.execute(sql, colour)
+    conn.commit()
+
+
 
 if __name__ == '__main__':
-    conn = create_connection('db\\colours.db')
-    if conn is not None:
-        create_table(conn, colours_table_sql)
-    else:
-        print("ERROR: cannot connect to database")
-    conn.close()
+    db = 'db\\colours.db'
+    conn = create_connection(db)
+
+    with conn:
+        colour = ('white', 255, 255, 255)
+        create_colour(conn, colour)
