@@ -2,10 +2,12 @@ import artwork
 import datetime
 import time
 import colorsys
+from wakey import WakeyThread
 from database import Colours
 # import bridge from connect script
 artwork.connect()
 from connect import b, ip
+threads = []
 
 # things that can be listed -- lights (and status), groups/rooms
 
@@ -67,6 +69,16 @@ def get_ans():
         ans = str.lower(input('y/n > '))
     return ans
 
+# clears all finished threads
+def clear_finished_threads():
+    for t in threads:
+        if not t.isAlive():
+            threads.remove(t)
+
+def kill_all_threads():
+    for t in threads:
+        t.stop()
+
 
 ##################
 #                #
@@ -103,6 +115,11 @@ def ls(args):
         colours = db.get_all_names()
         for c in colours:
             print(c)
+        print()
+    elif object == 'wakemeup':        
+        print('\nWAKEMEUP:\n')
+        for t in threads:
+            print(f'{t.light_name}@{t.wake_time}')
         print()
     else:
         print(f"'{object}' is not a valid object to list.")
@@ -223,13 +240,17 @@ def wakemeup(args):
         day = "today"
     
     print(f"Waiting to wake you up at {wake_time.hour}:{wake_time.minute} {day}...")
-    
-    # loops until time to turn on
-    while True:
-        if datetime.datetime.now() > wake_time:
-            b.set_light(light_name, 'on', True)
-            print("Wakey wakey...\n")
-            break
+
+    # starts thread so command line can still be used while waiting (wakey.py)
+    t = WakeyThread(b, light_name, wake_time)
+    threads.append(t)
+    t.start()
+
+def dontwakemeup(args):
+    if len(args) != 0:
+        print('ERROR: dontwakemeup takes no arguments.')
+    kill_all_threads()
+
 
 # sets light colour to specific rgb colour
 def setcol(args):
@@ -334,6 +355,8 @@ def execute(command):
         brightnessall(args)
     elif method == 'wakemeup':
         wakemeup(args)
+    elif method == 'dontwakemeup':
+        dontwakemeup(args)
     elif method == 'setcol':
         setcol(args)
     elif method == 'newcol':
@@ -351,14 +374,19 @@ def execute(command):
 def start_CLI():
     artwork.hcontroller()
     while True:
-        command = input("bridge@"+ip+":# ")
-
-        if str.lower(command) == 'exit':
-            break
-        elif command.strip() == '':
-            print("ERROR: invalid command, type help for all valid commands.")
-        else:
-            execute(split(command))
+        try:
+            command = input("bridge@"+ip+":# ")
+            clear_finished_threads()
+            if str.lower(command) == 'exit':
+                kill_all_threads()
+                return
+            elif command.strip() == '':
+                print("ERROR: invalid command, type help for all valid commands.")
+            else:
+                execute(split(command))
+        except KeyboardInterrupt:
+            kill_all_threads()
+            return
 
 
 
@@ -369,6 +397,8 @@ if __name__ == "__main__":
 """
 TODO:
 change names of lights and groups
+
+disco mode
 
 change colour of groups
 """
