@@ -79,7 +79,6 @@ def kill_all_threads():
     for t in threads:
         t.stop()
 
-
 ##################
 #                #
 #    COMMANDS    #
@@ -249,7 +248,44 @@ def wakemeup(args):
 def dontwakemeup(args):
     if len(args) != 0:
         print('ERROR: dontwakemeup takes no arguments.')
+        return
     kill_all_threads()
+
+# cycle through loads of different colours on all lights
+def disco(args):
+    if len(args) != 0:
+        print('ERROR: disco takes no arguments')
+        return
+    
+    colours = [[255,0,0], [255,255,0], [0,255,0], [0,255,255], [0,0,255], [255,0,255]]
+    i = 0
+    lights = []
+    for l in b.lights:
+        try:
+            x = l.colormode
+            if l.on:
+                lights.append(l)
+            else:
+                print(f'ERROR: {l.name} is turned off.')
+        except Exception:
+            print(f'ERROR: {l.name} does not have colour capabilities.')
+    if len(lights) == 0:
+        print('ERROR: none of your colour-enabled lights are on.')
+        return
+    print('PARTAY!!! (press ctrl+c to stop the disco)')
+    try:
+        while True:
+            try:
+                for l in lights:
+                    set_light_to_colour(l.name, colours[i])
+                i += 1
+                if i == len(colours) - 1:
+                    i = 0
+                time.sleep(0.5)
+            except KeyboardInterrupt:
+                return
+    except KeyboardInterrupt:
+        return
 
 
 # sets light colour to specific rgb colour
@@ -367,6 +403,8 @@ def execute(command):
         delcol(args)
     elif method == 'delallcol':
         delallcol(args)
+    elif method == 'disco':
+        disco(args)
     else:
         print("ERROR: invalid command, type help for all valid commands.")
 
