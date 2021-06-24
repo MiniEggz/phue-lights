@@ -429,12 +429,10 @@ def start_CLI():
 
 
 if __name__ == "__main__":
-    try:
-        if not b:
-            print('ERROR: could not connect to bridge.')
-    except:
-        pass
-    start_CLI()
+    if b == False:
+        print('ERROR: could not connect to a bridge.')
+    else:
+        start_CLI()
 
 
 """
