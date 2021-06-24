@@ -31,9 +31,29 @@ def get_bridge_iplist(iplist):
             b = Bridge(ip)
             b.connect()
             bridge_iplist.append(ip)
+            print(f'{ip}: SUCCESS')
         except Exception as e:
             if button_not_pressed_message in str(e):
                 bridge_iplist.append(ip)
+                print(f'{ip}: SUCCESS')
+            else:
+                print(f'{ip}: FAIL')
+
+# find first bridge on network given all ips
+def get_first_bridge_ip(iplist):
+    print('finding ip address of first bridge device on your network...')
+    for ip in iplist:
+        try:
+            b = Bridge(ip)
+            b.connect()
+            print(f'{ip}: SUCCESS')
+            write_ip(ip)
+        except Exception as e:
+            if button_not_pressed_message in str(e):
+                print(f'{ip}: SUCCESS')
+                write_ip(ip)
+            else:
+                print(f'{IP}: FAIL')
 
     if len(bridge_iplist) == 0:
         print('no bridge ip addresses were found.')
@@ -83,7 +103,7 @@ def read_ip():
     return ip
 
 # goes through all possible ips up to specified number
-def get_generic_ip_list(max):
+def get_generic_ip_list():
     iplist = []
     for i in range (1, 255):
         iplist.append(f'192.168.0.{i}')
@@ -119,7 +139,8 @@ def connect():
                 bridge = find_bridges(get_iplist())
                 if not bridge:
                     print('trying brute force...')
-                    bridge = find_bridges(get_generic_ip_list(50))
+                    bridge = find_first
+                    bridge = find_bridges(get_generic_ip_list())
                     if not bridge:
                         return False, False
 
