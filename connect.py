@@ -104,7 +104,7 @@ def connect():
                     bridge_ip = select_bridge(bridge_iplist)
                     write_ip(bridge_ip)
                 else:
-                    return False
+                    return False, False
 
 b, ip = connect()
 
