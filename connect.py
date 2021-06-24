@@ -82,6 +82,24 @@ def read_ip():
     f.close()
     return ip
 
+# goes through all possible ips up to specified number
+def get_generic_ip_list(max):
+    iplist = []
+    for i in range (1, 255):
+        iplist.append(f'192.168.0.{i}')
+    return
+
+# finds bridge and writes to file
+def find_bridges(iplist):
+    # need to find the ip and store in ip.txt
+    bridge_iplist = get_bridge_iplist(iplist)
+    if len(bridge_iplist) > 0:
+        bridge_ip = select_bridge(bridge_iplist)
+        write_ip(bridge_ip)
+        return True
+    else:
+        return False
+
 # connect to the bridge, return bridge object and ip
 def connect():
     while True:
@@ -98,25 +116,11 @@ def connect():
                 print('cannot connect to bridge: please press button on bridge and press enter.')
                 input()
             else:
-                # need to find the ip and store in ip.txt
-                bridge_iplist = get_bridge_iplist(get_iplist())
-                if len(bridge_iplist) > 0:
-                    bridge_ip = select_bridge(bridge_iplist)
-                    write_ip(bridge_ip)
-                else:
-                    return False, False
+                bridge = find_bridges(get_iplist())
+                if not bridge:
+                    print('trying brute force...')
+                    bridge = find_bridges(get_generic_ip_list(50))
+                    if not bridge:
+                        return False, False
 
 b, ip = connect()
-
-
-
-
-
-#b = Bridge(ip)
-
-# to connect, you must press the button in last 30 seconds
-#b.connect()
-
-# try to connect to the ip stored in the text file..
-
-# if not, find the ip
