@@ -49,15 +49,15 @@ def get_first_bridge_ip(iplist):
             b.connect()
             print(f'{ip}: SUCCESS')
             write_ip(ip)
-            return ip
+            return [ip]
         except Exception as e:
             if button_not_pressed_message in str(e):
                 print(f'{ip}: SUCCESS')
                 write_ip(ip)
-                return ip
+                return [ip]
             else:
                 print(f'{IP}: FAIL')
-                return False
+    return [] # empty if there is nothing found
 
 # user to pick an option from a list
 def get_index(iplist):
@@ -133,7 +133,7 @@ def connect():
                 bridge = find_bridges(get_iplist())
                 if not bridge:
                     print('trying brute force...')
-                    bridge = select_bridge(find_bridges(get_generic_ip_list()))
+                    bridge = select_bridge(get_first_bridge_ip(get_generic_ip_list()))
                     if not bridge:
                         return False, False
 
