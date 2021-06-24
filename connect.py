@@ -87,7 +87,7 @@ def get_generic_ip_list(max):
     iplist = []
     for i in range (1, 255):
         iplist.append(f'192.168.0.{i}')
-    return
+    return iplist
 
 # finds bridge and writes to file
 def find_bridges(iplist):
