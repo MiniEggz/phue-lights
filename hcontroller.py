@@ -352,9 +352,13 @@ def start_CLI():
     artwork.hcontroller()
     while True:
         command = input("bridge@"+ip+":# ")
+
         if str.lower(command) == 'exit':
             break
-        execute(split(command))
+        elif command.strip() == '':
+            print("ERROR: invalid command, type help for all valid commands.")
+        else:
+            execute(split(command))
 
 
 
