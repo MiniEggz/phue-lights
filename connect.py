@@ -56,7 +56,7 @@ def get_first_bridge_ip(iplist):
                 write_ip(ip)
                 return [ip]
             else:
-                print(f'{IP}: FAIL')
+                print(f'{ip}: FAIL')
     return [] # empty if there is nothing found
 
 # user to pick an option from a list
