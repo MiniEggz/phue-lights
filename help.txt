@@ -3,3 +3,47 @@ To find the ip, can do arp -a to list all the ips on the network
 The ping the ips using ping -a [ip] to see what the device is
 
 Should finally come up with 'Pinging Phillips-hue'
+
+HELP:
+
+COMMANDS:
+
+- ls [object]
+	objects: lights, groups/rooms, wakemeup, colours
+	- lists the lights, groups/rooms, colours or scheduled wakemeup timers
+
+- turn [light_name] [on/off]
+	- turns the light specified on or off
+
+- turnall [group_name] [on/off]
+	- turns all lights in specified group on or off
+
+- brightness [light_name] [brightness]
+	- changes brightness of specified light
+
+- brightnessall [group_name] [brightness]
+	- changes brightness of lights in specified group
+
+- setcol [lightname] [red value] [green value] [blue value]
+	- sets the specified light to certain colour
+
+- newcol [colour_name] [red value] [green value] [blue value]
+	- creates new accessible colour
+
+- col [light_name] [colour_name]
+	- sets colour of specified light to the colour saved by user
+
+- delcol [colour_name]
+	- deletes colour preset
+
+delallcol
+	- clears all saved colours
+
+- disco
+	- will make all colour-enabled ligts in the house go different colours until stopped with ctrl+c
+
+- wakemeup [light_name] [hour] [minute]
+	- turns specified light on at given time
+
+- dontwakemeup
+	- gets rid of all wakemeup alarms

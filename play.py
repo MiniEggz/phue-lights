@@ -57,3 +57,4 @@ for i in range (0,len(rgb)):
 
 for x in rgb:
     print(x+1)
+flash()
