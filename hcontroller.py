@@ -128,6 +128,7 @@ def ls(args):
 def turn(args):
     if len(args) != 2:
         print("ERROR: 'turn' takes exactly 2 args - [light_name] and [on/off]")
+        return
 
     light_name = args[0]
     status = str.lower(args[1])
@@ -210,6 +211,7 @@ def brightnessall(args):
         g.brightness = brightness
     except Exception:
         print("ERROR: this group name does not exist.")
+        return
 
 # turns specified light on at a specified time
 def wakemeup(args):
@@ -222,11 +224,17 @@ def wakemeup(args):
             int(i)
     except Exception:
         print("ERROR: at least one of the arguments is not an integer.")
+        return
 
     light_name = args[0]
     hours = int(args[1])
     mins = int(args[2])
 
+    conds = [hours > 24, hours < 0, mins > 60, mins < 0]
+
+    if any(conds):
+        print("ERROR: hours or minutes are out of range.")
+        return
     # set datetime objects for now and wake time
     now = datetime.datetime.now()
     wake_time = datetime.datetime(now.year, now.month, now.day, hours, mins)
@@ -267,8 +275,10 @@ def disco(args):
                 lights.append(l)
             else:
                 print(f'ERROR: {l.name} is turned off.')
+                return
         except Exception:
             print(f'ERROR: {l.name} does not have colour capabilities.')
+            return
     if len(lights) == 0:
         print('ERROR: none of your colour-enabled lights are on.')
         return
@@ -361,6 +371,7 @@ def delcol(args):
             print(f"'{args[0]}' has been deleted.'")
     else:
         print(f"ERROR: '{args[0]}' is not a defined colour.")
+        return
 
 # deletes all saved colours
 def delallcol(args):
