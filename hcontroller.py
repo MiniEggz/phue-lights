@@ -385,6 +385,12 @@ def delallcol(args):
     if ans == 'y':
         db.delete_all_colours()
         print('all saved colours have been deleted.') 
+
+def help():
+    file = open('help.txt', 'r')
+    help_message = file.read()
+    file.close()
+    print(help_message)
     
 # command handler - takes list with each element being word from command
 def execute(command):
@@ -416,6 +422,8 @@ def execute(command):
         delallcol(args)
     elif method == 'disco':
         disco(args)
+    elif method == 'help':
+        help()
     else:
         print("ERROR: invalid command, type help for all valid commands.")
 
