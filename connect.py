@@ -1,5 +1,4 @@
 from phue import Bridge
-from bridge_ip import ip
 import subprocess
 import os
 import re
