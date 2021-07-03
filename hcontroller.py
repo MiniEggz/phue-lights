@@ -275,10 +275,8 @@ def disco(args):
                 lights.append(l)
             else:
                 print(f'ERROR: {l.name} is turned off.')
-                return
         except Exception:
             print(f'ERROR: {l.name} does not have colour capabilities.')
-            return
     if len(lights) == 0:
         print('ERROR: none of your colour-enabled lights are on.')
         return
