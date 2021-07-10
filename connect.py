@@ -27,8 +27,10 @@ def get_bridge_iplist(iplist):
     bridge_iplist = []
     for ip in iplist:
         try:
+            # try to connect
             b = Bridge(ip)
             b.connect()
+            b.lights # double checks bridge is connected
             bridge_iplist.append(ip)
             print(f'{ip}: SUCCESS')
         except Exception as e:
@@ -44,8 +46,10 @@ def get_first_bridge_ip(iplist):
     print('finding ip address of first bridge device on your network...')
     for ip in iplist:
         try:
+            # try to connect
             b = Bridge(ip)
             b.connect()
+            b.lights # double checks bridge is connected
             print(f'{ip}: SUCCESS')
             write_ip(ip)
             return [ip]
@@ -121,6 +125,7 @@ def connect():
             ip = read_ip()
             b = Bridge(ip)
             b.connect()
+            b.lights
             print(f'Connected to bridge@{ip}\n')
             return b, ip
         except Exception as e:
