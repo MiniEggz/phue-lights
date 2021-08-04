@@ -3,10 +3,20 @@ import subprocess
 import os
 import re
 import sys
+import socket
 
 import artwork
 
 button_not_pressed_message = 'The link button has not been pressed in the last 30 seconds.'
+
+# gets the host address (x.x.x.i) so can iterate through devices on the network
+def get_host_address():
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    local_ip = local_ip.split('.')
+    return f'{local_ip[0]}.{local_ip[1]}.{local_ip[2]}'
+
+host_address = get_host_address()
 
 # get all ips on the network
 def get_iplist():
@@ -104,7 +114,7 @@ def read_ip():
 def get_generic_ip_list():
     iplist = []
     for i in range (1, 255):
-        iplist.append(f'192.168.0.{i}')
+        iplist.append(f'{host_address}.{i}')
     return iplist
 
 # finds bridge and writes to ip.txt
