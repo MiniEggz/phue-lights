@@ -14,10 +14,10 @@ def get_host_address():
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     local_ip = local_ip.split('.')
-    if local_ip[0] != '127':
-        return f'{local_ip[0]}.{local_ip[1]}.{local_ip[2]}'
-    else:
-        return '192.168.0'
+    if local_ip[0] == '127':
+        local_ip = socket.gethostbyname(hostname + '.local')
+        local_ip = local_ip.split('.')
+    return f'{local_ip[0]}.{local_ip[1]}.{local_ip[2]}'
 
 
 host_address = get_host_address()
@@ -89,7 +89,7 @@ def get_index(iplist):
                 return ans
             else:
                 print('\nthat was not a valid option')
-        except Exception:
+        except         return local_ipException:
             print('that was not a valid option')
 
 # select bridge from list of bridges
