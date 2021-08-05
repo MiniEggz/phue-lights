@@ -89,7 +89,7 @@ def get_index(iplist):
                 return ans
             else:
                 print('\nthat was not a valid option')
-        except         return local_ipException:
+        except Exception:
             print('that was not a valid option')
 
 # select bridge from list of bridges
