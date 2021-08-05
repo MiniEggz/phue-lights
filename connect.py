@@ -14,7 +14,11 @@ def get_host_address():
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     local_ip = local_ip.split('.')
-    return f'{local_ip[0]}.{local_ip[1]}.{local_ip[2]}'
+    if local_ip[0] != '127':
+        return f'{local_ip[0]}.{local_ip[1]}.{local_ip[2]}'
+    else:
+        return '192.168.0'
+
 
 host_address = get_host_address()
 
