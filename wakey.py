@@ -1,6 +1,7 @@
 from threading import Thread
 import datetime
 
+
 class WakeyThread(Thread):
 
     # get bridge, light name and wake_time and set flag
@@ -15,9 +16,9 @@ class WakeyThread(Thread):
     def run(self):
         while self._run:
             if datetime.datetime.now() > self.wake_time:
-                self.b.set_light(self.light_name, 'on', True)
+                self.b.set_light(self.light_name, "on", True)
                 self._run = False
-    
+
     # change flag to stop the thread
     def stop(self):
         self._run = False
