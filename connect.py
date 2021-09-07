@@ -11,16 +11,38 @@ button_not_pressed_message = (
     "The link button has not been pressed in the last 30 seconds."
 )
 
+# get answer to yes/no question
+def get_ans():
+    while True:
+        ans = str.lower(input('> '))
+        if ans == 'y':
+            return True
+        elif ans == 'n':
+            return False
+        else:
+            print('Error, invalid answer.')
+
+def get_host_address_from_user():
+    print("What is the first 3 components of your host ip address?")
+    while True:
+        host = input("> ")
+        answer = input("Are you sure? (y/n): ")
+        if get_ans():
+            return host
+
+
 # gets the host address (x.x.x.i) so can iterate through devices on the network
 def get_host_address():
-    hostname = socket.gethostname()
-    local_ip = socket.gethostbyname(hostname)
-    local_ip = local_ip.split(".")
-    if local_ip[0] == "127":
-        local_ip = socket.gethostbyname(hostname + ".local")
+    try:
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
         local_ip = local_ip.split(".")
-    return f"{local_ip[0]}.{local_ip[1]}.{local_ip[2]}"
-
+        if local_ip[0] == "127":
+            local_ip = socket.gethostbyname(hostname + ".local")
+            local_ip = local_ip.split(".")
+        return f"{local_ip[0]}.{local_ip[1]}.{local_ip[2]}"
+    except Exception:
+        return get_host_address_from_user()
 
 host_address = get_host_address()
 
