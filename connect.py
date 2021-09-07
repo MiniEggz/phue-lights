@@ -22,11 +22,12 @@ def get_ans():
         else:
             print('Error, invalid answer.')
 
+# user inputs their host address manually
 def get_host_address_from_user():
-    print("What is the first 3 components of your host ip address?")
+    print("What are the first 3 components of your host ip address?")
     while True:
         host = input("> ")
-        answer = input("Are you sure? (y/n): ")
+        print("Are you sure? (y/n)")
         if get_ans():
             return host
 
